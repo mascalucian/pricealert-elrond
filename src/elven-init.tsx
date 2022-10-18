@@ -40,18 +40,24 @@ export const ElvenInit = () => {
       });
 
       setLoggedIn(Boolean(isInitialized));
-
-      prices();
     };
 
     initElven();
+    prices();
     return () => ElvenJS.destroy();
   }, []);
 
   const prices = async() => {
+    try{
+    setPending(true);
     const result = await fetch('https://devnet-api.elrond.com/economics?fields=price');
     const jsonResult = await result.json();
     setEgldPrice(await jsonResult["price"]);
+    } catch (e: any) {
+      throw new Error(e?.message);
+    } finally {
+      setPending(false);
+    }
   }
 
   const loginWithExtension = async () => {

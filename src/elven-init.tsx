@@ -15,10 +15,12 @@ export const ElvenInit = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [pending, setPending] = useState(false);
   const [txHash, setTxHash] = useState('');
+  const [egldPrice, setEgldPrice] = useState();
 
   const qrContainer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+
     const initElven = async () => {
       const isInitialized = await ElvenJS.init({
         apiUrl: 'https://devnet-api.elrond.com',
@@ -38,11 +40,19 @@ export const ElvenInit = () => {
       });
 
       setLoggedIn(Boolean(isInitialized));
+
+      prices();
     };
 
     initElven();
     return () => ElvenJS.destroy();
   }, []);
+
+  const prices = async() => {
+    const result = await fetch('https://devnet-api.elrond.com/economics?fields=price');
+    const jsonResult = await result.json();
+    setEgldPrice(await jsonResult["price"]);
+  }
 
   const loginWithExtension = async () => {
     try {
@@ -148,6 +158,11 @@ export const ElvenInit = () => {
             </button>
           )}
           {loggedIn && (
+            <button className="button" id="button-create-alert" onClick={makeTransaction}>
+              Create Alert
+            </button>
+          )}
+          {loggedIn && (
             <button className="button" id="button-mint" onClick={mintNft}>
               Mint NFT
             </button>
@@ -191,8 +206,12 @@ export const ElvenInit = () => {
       <h1 className="mt-0 mb-16 reveal-from-bottom" data-reveal-delay="200">
               Create price alerts for <span className="text-color-primary">Elrond</span>
             </h1>
+      <p className='text-color-primary'>
+          
+        Current price: {egldPrice}
+      </p>
 
-      <p>
+      {/* <p>
         Login with{' '}
         <a
           href="https://chrome.google.com/webstore/detail/maiar-defi-wallet/dngmlblcodfobpdpecaadgfbcggfjfnm"
@@ -212,7 +231,7 @@ export const ElvenInit = () => {
         and mint the NFT! (max 10 per one address). You can also send a standard
         EGLD transaction on the devnet.{' '}
         <strong>In the end you will get the url to the Elrond explorer.</strong>
-      </p>
+      </p> */}
       <p>
         Remember to fund your newly created devnet wallet. You can do this using{' '}
         <a

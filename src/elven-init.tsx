@@ -9,6 +9,7 @@ import {
   U32Value,
   LoginMethodsEnum,
 } from 'elven.js';
+import axios from "axios";
 import { useEffect, useState, useRef, LegacyRef } from 'react';
 
 export const ElvenInit = () => {
@@ -16,8 +17,29 @@ export const ElvenInit = () => {
   const [pending, setPending] = useState(false);
   const [txHash, setTxHash] = useState('');
   const [egldPrice, setEgldPrice] = useState();
+  const [backendData, setBackendData] = useState<any | null>(null);
 
   const qrContainer = useRef<HTMLDivElement>(null);
+
+ 
+
+  function getData() {
+    axios({
+      method: "GET",
+      url:"http://localhost:5000/",
+    })
+    .then((response) => {
+      const res =response.data
+      setBackendData(({
+        price: res.price
+        }))
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+        }
+    })}
 
   useEffect(() => {
 
@@ -44,6 +66,7 @@ export const ElvenInit = () => {
 
     initElven();
     prices();
+    getData();
     return () => ElvenJS.destroy();
   }, []);
 
@@ -213,9 +236,11 @@ export const ElvenInit = () => {
               Create price alerts for <span className="text-color-primary">Elrond</span>
             </h1>
       <p className='text-color-primary'>
-          
-        Current price: {egldPrice}
+        Current price: {egldPrice} 
       </p>
+      {backendData &&
+        <p>Data from backend: {backendData.price} </p>
+      }
 
       {/* <p>
         Login with{' '}

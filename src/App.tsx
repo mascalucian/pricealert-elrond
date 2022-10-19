@@ -8,14 +8,11 @@ function App() {
   return (
     <div className="App">
       <div className="logos">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
+        <a href="https://quadrant.software" target="_blank">
+          <img src="/white-logo-text.png" className="logo" alt="Quadrant logo" />
         </a>
       </div>
-      <h1 className="header header-nav-right">Elven.js + Vite + React</h1>
+      <h1 className="header header-nav-right">Elrond Price Alerting</h1>
       <ElvenInit />
     </div>
   );

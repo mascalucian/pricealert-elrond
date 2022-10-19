@@ -18,6 +18,7 @@ export const ElvenInit = () => {
   const [txHash, setTxHash] = useState('');
   const [egldPrice, setEgldPrice] = useState();
   const [backendData, setBackendData] = useState<any | null>(null);
+  const [userAddress,setUserAddress] = useState('None');
 
   const qrContainer = useRef<HTMLDivElement>(null);
 
@@ -54,10 +55,12 @@ export const ElvenInit = () => {
         onLoggedIn: () => {
           setLoggedIn(true);
           setPending(false);
+          setUserAddress(ElvenJS.storage.get('address'));
         },
         onLogout: () => {
           setLoggedIn(false);
           setPending(false);
+          setUserAddress('None');
         },
       });
 
@@ -237,6 +240,9 @@ export const ElvenInit = () => {
             </h1>
       <p className='text-color-primary'>
         Current price: {egldPrice} 
+      </p>
+      <p>
+        Current address: {userAddress}
       </p>
       {backendData &&
         <p>Data from backend: {backendData.price} </p>
